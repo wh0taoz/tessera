@@ -1,0 +1,5 @@
+# The hole must be an int; `n` and `m` are the obvious guesses.
+let add : int -> int -> int = fun (x: int) -> fun (y: int) -> x + y in
+let n : int = 5 in
+let m : int = 7 in
+add ?h n

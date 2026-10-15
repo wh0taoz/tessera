@@ -1,0 +1,5 @@
+# Two holes inside a function body; both must be ints.
+let max : int -> int -> int =
+  fun (a: int) -> fun (b: int) -> if a < b then ?then_branch else ?else_branch
+in
+max 3 4
