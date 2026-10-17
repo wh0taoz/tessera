@@ -1,4 +1,0 @@
-# The hole is applied to an int and must return a bool: so ?f : int -> bool.
-let limit : int = 10 in
-let ok : bool = ?f 3 in
-if ok then limit else ?fallback

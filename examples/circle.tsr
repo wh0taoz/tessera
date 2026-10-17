@@ -1,0 +1,22 @@
+# Floats, constants and conversions.
+const float PI = 3.14159;
+const int SIDES = 4;
+
+def circle_area(float r) -> float {
+    # Must be a float: PI is a float, and int and float never mix.
+    return PI * ?r_expr * r;
+}
+
+def square_area(int side) -> int {
+    return side * side;
+}
+
+def main() -> int {
+    const float radius = 2.0;
+    float total = circle_area(radius);
+    # float(?) needs an int inside it.
+    total = total + float(?n);
+    # Can't be filled: assigning to a const is a type error.
+    # SIDES = ?;
+    return int(total);
+}

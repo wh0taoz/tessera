@@ -1,0 +1,24 @@
+# Holes in a loop condition (bool) and in an assignment (int).
+def count_up(int limit) -> int {
+    int i = 0;
+    int total = 0;
+    while (?cond) {
+        total = total + i;
+        i = ?step;
+    }
+    return total;
+}
+
+def is_small(int x) -> bool {
+    return x < 10 and not (x == 0);
+}
+
+def main() -> int {
+    if (is_small(?)) {
+        return count_up(5);
+    } elif (False) {
+        return 0;
+    } else {
+        return -1;
+    }
+}

@@ -1,5 +1,13 @@
-# Two holes inside a function body; both must be ints.
-let max : int -> int -> int =
-  fun (a: int) -> fun (b: int) -> if a < b then ?then_branch else ?else_branch
-in
-max 3 4
+# Two holes in return statements: both must be ints (the return type).
+# A good guesser should pick different values for the two branches.
+def max(int a, int b) -> int {
+    if (a < b) {
+        return ?then_branch;
+    } else {
+        return ?else_branch;
+    }
+}
+
+def main() -> int {
+    return max(3, 4);
+}
