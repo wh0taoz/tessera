@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+
 from tessera.tokens import TokenType, Token, KEYWORDS, SINGLE_CHAR_TOKENS, TWO_CHAR_TOKENS
 
 class LexError(Exception):
@@ -39,6 +42,7 @@ class Lexer:
             return ""
         return self.source[self.pos+1]
 
+    #ni u jendnom trenutku se ne menja ch da ukoliko jedan test fail-uje ostane konzistentnost
     def tokenize(self):
         tokens = []
         while not self.at_end():
@@ -48,16 +52,22 @@ class Lexer:
                 self.advance() #ignorisemo whitespace
                 continue
 
-            if ch.isdigit():
+            if ch.isdigit(): #provera za int i float literale
                 line = self.line
                 column = self.column
                 start = self.pos
                 while self.current().isdigit():
                     self.advance()
-                tokens.append(Token(TokenType.INT_LIT, self.source[start:self.pos], line, column))
+                kind = TokenType.INT_LIT
+                if self.current() == '.' and self.peek().isdigit():
+                    self.advance()
+                    while self.current().isdigit():
+                        self.advance()
+                    kind = TokenType.FLOAT_LIT
+                tokens.append(Token(kind, self.source[start:self.pos], line, column))
                 continue
 
-            if ch.isalpha() or ch == "_":
+            if ch.isalpha() or ch == "_": #provera za kljucne reci i ident
                 line = self.line
                 column = self.column
                 start = self.pos
@@ -68,7 +78,7 @@ class Lexer:
                 tokens.append(Token(kind, word, line, column))
                 continue
 
-            pair = ch + self.peek() #prvo probamo duzi token da li postoji
+            pair = ch + self.peek() #provera za poredjenja; prvo probamo duzi token da li postoji
             if pair in TWO_CHAR_TOKENS:
                 line = self.line
                 column = self.column
@@ -77,13 +87,35 @@ class Lexer:
                 tokens.append(Token(TWO_CHAR_TOKENS[pair], pair, line, column))
                 continue
 
-            if ch in SINGLE_CHAR_TOKENS: #ako ne proveravamo ovo
+            if ch in SINGLE_CHAR_TOKENS: #provera za poredjenja
                 line = self.line
                 column = self.column
                 self.advance()
                 tokens.append(Token(SINGLE_CHAR_TOKENS[ch], ch, line, column))
                 continue
+            if ch == "?":
+                line = self.line
+                column = self.column
+                start = self.pos
+                self.advance()
+                while self.current().isalnum() or self.current() == "_":
+                    self.advance()
+                tokens.append(Token(TokenType.HOLE, self.source[start:self.pos], line, column))
+                continue
+
+            if ch == "#":
+                while not self.at_end() and self.current() != '\n':
+                    self.advance()
+                continue
 
             raise LexError(f"unknown char {ch!r} at line {self.line} in column {self.column}") #!r samo daje da je char u navodnicima
         tokens.append(Token(TokenType.EOF, "", self.line, self.column)) #nakon sto prodjemo kroz source dodajemo end of file token u nasu listu tokena
         return tokens
+
+
+#pokrece se samo kad se fajl pokrene direktno: python src/tessera/lexer.py examples/max.tsr
+#generisano pomocu claude-a
+if __name__ == "__main__":
+    source = Path(sys.argv[1]).read_text(encoding="utf-8")
+    for t in Lexer(source).tokenize():
+        print(f"{t.line}:{t.column}\t{t.kind.name:<10} {t.text!r}")
