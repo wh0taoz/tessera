@@ -84,3 +84,28 @@ KEYWORDS = { #recnik/mapa kljucnih reci iz source koda koja ih povezuje sa tipom
     "bool": TokenType.BOOL_KW,
     "void": TokenType.VOID_KW,
 }
+
+SINGLE_CHAR_TOKENS = {
+    "+": TokenType.PLUS,
+    "-": TokenType.MINUS,
+    "*": TokenType.MUL,
+    "/": TokenType.DIV,
+    "%": TokenType.MOD,
+    "=": TokenType.EQ,
+    "<": TokenType.LT,
+    ">": TokenType.GT,
+    "(": TokenType.LPAREN,
+    ")": TokenType.RPAREN,
+    "{": TokenType.LCURLY,
+    "}": TokenType.RCURLY,
+    ",": TokenType.COMMA,
+    ";": TokenType.SEMI,
+}
+
+TWO_CHAR_TOKENS = {
+    "->": TokenType.ARROW,
+    "==": TokenType.EQ_EQ,
+    "!=": TokenType.NOT_EQ,
+    "<=": TokenType.LT_EQ,
+    ">=": TokenType.GT_EQ,
+}
